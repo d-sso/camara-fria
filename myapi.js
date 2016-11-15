@@ -139,7 +139,7 @@ app.use(function (err, req, res, next) {
   } else {
     next(err);
   }
-}); // apt.use()
+});
 
 // -----------------------------------------------------------------------
 // Stop the server
