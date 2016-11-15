@@ -60,15 +60,12 @@ connection.connect();
 console.log('Connected to mySQL database');
 
 function updateTemperatureValueOnBD(temperature,sp,id){
-	if(prevTemp!=temperature){
-		prevTemp = temperature;
-		connection.query('insert into temperatura(value,setpoint,idSensor) values (' + temperature + ','+ sp + ','+id+');', 
-			function(err,rows,fields){
-				if(err){
-					console.log('Error writing to DB');
-					console.log(err);}
-			});
-	}
+	connection.query('insert into temperatura(value,setpoint,idSensor) values (' + temperature + ','+ sp + ','+id+');', 
+		function(err,rows,fields){
+			if(err){
+				console.log('Error writing to DB');
+				console.log(err);}
+		});
 };
 
 //Initialize the GPIO and open the ports as outputs
@@ -90,7 +87,7 @@ function updateReadings() {
 		}
 		gpio.write(outputs[i].pin,Number(outputs[i].value));
 		tempSensors[i].currValue = temperature;
-		if(abs(tempSensors[i].currValue - tempSensors[i].prevValue)>tempSensors[i].deadband){
+		if(Math.abs(tempSensors[i].currValue - tempSensors[i].prevValue)>tempSensors[i].deadband){
 			updateTemperatureValueOnBD(temperature,tempSensors[i].setpoint,tempSensors[i].id);
 			tempSensors[i].prevValue = tempSensors[i].currValue;
 		}
@@ -122,7 +119,12 @@ app.get('/setpoint',function(req,res){
 	test = parseFloat(req.query.sp);
 	id = parseFloat(req.query.id);
 	if(!isNaN(test) && !isNaN(id)){
-		tempSensors[id].setpoint = test;
+		if(id<tempSensors.length){
+			tempSensors[id].setpoint = test;
+			updateTemperatureValueOnBD(tempSensors[id].currValue,tempSensors[id].setpoint,tempSensors[id].id);
+			res.json(tempSensors[id]);
+			return;
+		}
 	}
 	res.json(tempSensors);
 });

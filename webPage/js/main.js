@@ -12,9 +12,6 @@ app.controller('myCtrl', ['$scope','$log','$http','$filter',function($scope,$log
   	                 	"Temperatura",
   	                 	"Setpoint"
   					];
-  	$scope.myStartTime = "01-sep-16";
-  	$scope.myEndTime = "07-sep-16";
-  	$scope.myInterval = "Dia";
   	
   	$scope.filter = $filter;
   	//Variaveis para o chart
@@ -30,7 +27,15 @@ app.controller('myCtrl', ['$scope','$log','$http','$filter',function($scope,$log
 		          type: 'linear',
 		          display: true,
 		          position: 'left'
-		        }]
+		        }],
+		    xAxes:[{
+				  type: 'time',
+				  time: {
+					  displayFormats: {
+						  minute: 'h:mm:ss'
+					  }
+				  }
+			}]
 	    }
      };
 	

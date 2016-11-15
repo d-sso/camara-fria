@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
         <script src="js/vendor/vSite/angular.min.js"></script>
+        <script src="js/vendor/moment.min.js"></script>
         <script src="js/vendor/vSite/Chart.min.js"></script>
         <script src="js/vendor/vSite/angular-chart.js"></script>
         <!-- Angular Material requires Angular.js Libraries -->
@@ -39,40 +40,25 @@
         	</div>
         </header>
         <div ng-app="myApp" ng-controller="myCtrl as ctrl" id="div1">     	
- <md-content class="md-padding">
-  	<form ng-submit="$event.preventDefault()" name="ctrl.timeForm">
-			<div layout-gt-sm="row">
-				<md-input-container flex>
-          			<label>Início</label>
-          			<input name="myStartTime" type="text" ng-model="myStartTime" ng-blur="change()"/>
-        		</md-input-container>
-        		<md-input-container flex>
-          			<label>Fim</label>
-          			<input name="myEndTime" type="text" ng-model="myEndTime" ng-blur="change()">
-        		</md-input-container>
-        		<md-input-container flex>
-          			<label>Intervalo</label>
-          			<input name="myInterval" type="text" ng-model="myInterval" ng-blur="change()">
-        		</md-input-container>
-			</div>
-    </form>
-  </md-content>
+		 <md-content class="md-padding">
+			<form ng-submit="$event.preventDefault()" name="ctrl.timeForm">
+					<div layout-gt-sm="row">
+						<md-input-container flex>
+							<label>Setpoint</label>
+							<input name="myStartTime" type="text" ng-model="myStartTime" ng-blur="change()"/>
+						</md-input-container>
+					</div>
+			</form>
+		  </md-content>
 			<section id="chart">
-				<div class="my-chart" style="width:600px;height: 300px;block">
+				<div class="my-chart" style="width:100%;height: 300px;block">
 					<canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" 
-					chart-dataset-override="datasetOverride" chart-series="series" chart-options="options" chart-click="onClick"> 
+					chart-dataset-override="datasetOverride" chart-series="series" chart-options="options" 
+					chart-click="onClick" style="max-height:400px"> 
 					</canvas>
 				</div>
 			</section>
 		</div>
-		
-		<footer>
-			<div id="note">
-				<p>
-					<!--Desenvolvido com PI Web API, AngularJS, HTML5 e Boilerplate-->
-				</p>
-			</div>
-		</footer>
 		
         <script src="js/vendor/jquery-3.1.0.min.js"></script>
         <script src="js/plugins.js"></script>
