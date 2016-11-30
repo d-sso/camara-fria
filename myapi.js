@@ -60,20 +60,21 @@ var connection = mysql.createConnection({
 		database:'dadosProcesso'
 });
 connection.connect();
-console.log('Connected to mySQL database');
+console.log(new Date().toLocaleString() + ' - Connected to mySQL database');
 
 function updateTemperatureValueOnBD(temperature,sp,id){
 	connection.query('insert into temperatura(value,setpoint,idSensor) values (' + temperature + ','+ sp + ','+id+');', 
 		function(err,rows,fields){
 			if(err){
-				console.log('Error writing to DB');
-				console.log(err);}
+				console.log(new Date().toLocaleString() + ' - Error writing to DB');
+				console.log(err);
+			}
 		});
 };
 
 //Initialize the GPIO and open the ports as outputs
 for (i in outputs){
-  console.log('opening GPIO port ' + outputs[i].gpio + ' on pin '
+  console.log(new Date().toLocaleString() + ' - opening GPIO port ' + outputs[i].gpio + ' on pin '
     + outputs[i].pin + ' as output');
   gpio.open(outputs[i].pin,gpio.OUTPUT,gpio.LOW,function(err){if(err){throw err;}});
 }
@@ -106,7 +107,7 @@ setInterval(updateReadings,5000);
 //
 
 app.use("/",express.static(__dirname+htmlRoot));
-console.log(__dirname+htmlRoot);
+console.log((new Date().toLocaleString()) + ' - HTML root: ' + __dirname+htmlRoot);
 
 // Express route for requests on temperature data
 // TODO! colocar selecao de IDS
@@ -180,7 +181,7 @@ app.use(function (err, req, res, next) {
 //
 process.on('SIGINT',function() {
 	var i;
-	console.log('Shutting down');
+	console.log((new Date().toLocaleString()) + ' - Shutting down');
 	for(i in outputs){
 		gpio.close(outputs[i].pin);
 	}
@@ -192,4 +193,4 @@ process.on('SIGINT',function() {
 // Start Express App Server
 //
 app.listen(3000);
-console.log('App Server is listening on port 3000');
+console.log(new Date().toLocaleString() + ' - App Server is listening on port 3000');
