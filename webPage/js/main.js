@@ -55,7 +55,7 @@ app.controller('myCtrl', ['$scope','$log','$http','$filter',function($scope,$log
  		$scope.myVals = [];
 		$scope.data = [];
 		$scope.http({
-						url:"http://192.168.1.103:3000/temperatureData"
+						url:"/temperatureData"
 						,method:"GET"
 			}).then(
 			function(response) {
