@@ -1,0 +1,2 @@
+Use following command to install service (using forever-service package)
+ sudo forever-service install tempMonitorService --script myapi.js --runAsUser root

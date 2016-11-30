@@ -40,7 +40,9 @@ var tempSensors = [{
 						prevValue:20,
 						currValue:20,
 						deadband:0.5,
-						currTs: 0
+						currTs: 0,
+						lastOn: new Date(),
+						minOffTime: 60000
 					}];
 
 // Function to read the temperature value
@@ -83,15 +85,22 @@ for (i in outputs){
 function updateReadings() {
 	for(i in tempSensors){
 		temperature = readTemperature(tempSensors[i].sensor);
+		//If temperature below setpoint, check if triggers event
 		if(temperature > tempSensors[i].setpoint){
-			outputs[i].value = 1;
+			//If last event is recent, does not triggers event
+			if(((new Date()).getTime()-(new Date(tempSensors[i].lastOn).getTime())) > tempSensors[i].minOffTime){
+				outputs[i].value = 1;
+			}
 		}
 		else{
 			outputs[i].value = 0;
 		}
+		if(outputs[i].value == 1){
+			tempSensors[i].lastOn = new Date();
+		}
 		gpio.write(outputs[i].pin,Number(outputs[i].value));
 		tempSensors[i].currValue = temperature;
-		tempSensors[i].currTs = new Date();
+		tempSensors[i].currTs = new Date().toLocaleString();
 		if(Math.abs(tempSensors[i].currValue - tempSensors[i].prevValue)>tempSensors[i].deadband){
 			updateTemperatureValueOnBD(temperature,tempSensors[i].setpoint,tempSensors[i].id);
 			tempSensors[i].prevValue = tempSensors[i].currValue;
