@@ -11,6 +11,8 @@
  * @throws none
  * @see nodejs.org
  * @see express.org
+ * @see rpio
+ * @see msql
  * 
  * @author Vinicius Alves
  */
@@ -37,7 +39,8 @@ var tempSensors = [{
 						setpoint:20,
 						prevValue:20,
 						currValue:20,
-						deadband:0.5
+						deadband:0.5,
+						currTs: 0
 					}];
 
 // Function to read the temperature value
@@ -87,6 +90,7 @@ function updateReadings() {
 		}
 		gpio.write(outputs[i].pin,Number(outputs[i].value));
 		tempSensors[i].currValue = temperature;
+		tempSensors[i].currTs = new Date();
 		if(Math.abs(tempSensors[i].currValue - tempSensors[i].prevValue)>tempSensors[i].deadband){
 			updateTemperatureValueOnBD(temperature,tempSensors[i].setpoint,tempSensors[i].id);
 			tempSensors[i].prevValue = tempSensors[i].currValue;
@@ -107,11 +111,39 @@ console.log(__dirname+htmlRoot);
 // Express route for requests on temperature data
 // TODO! colocar selecao de IDS
 app.get('/temperatureData',function(req,res){
-	connection.query('select * from temperatura where ts > (NOW() - interval 1 day)',function(err,rows){
-		if(!err){
-			res.json(rows);
-		}
-	});
+	id = parseFloat(req.query.id);
+	if(!isNaN(id)){
+		connection.query('select * from temperatura where ts > (NOW() - interval 1 day) and id=' + id,function(err,rows){
+			if(!err){
+				for(var i in tempSensors){
+					if(tempSensors[i].id == id){
+						rows.push({
+							ts: tempSensors[i].currTs,
+							value: tempSensors[i].currValue,
+							setpoint: tempSensors[i].setpoint,
+							idSensor: id
+						});
+					}
+				}
+				res.json(rows);
+			}
+		});
+	}
+	else{
+		connection.query('select * from temperatura where ts > (NOW() - interval 1 day)',function(err,rows){
+			if(!err){
+				for(var i in tempSensors){
+					rows.push({
+						ts: tempSensors[i].currTs,
+						value: tempSensors[i].currValue,
+						setpoint: tempSensors[i].setpoint,
+						idSensor: id
+					});
+				}
+				res.json(rows);
+			}
+		});
+	}
 });
 
 // Express route for requests on setpoint
