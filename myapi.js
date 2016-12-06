@@ -47,11 +47,15 @@ var tempSensors = [{
 
 // Function to read the temperature value
 function readTemperature(sensor){
-	tempFile = fs.readFileSync(basePathOneWire + sensor,'UTF8');
-	tempData = tempFile.split("\n")[1].split(" ")[9];
-	temperature = Number(tempData.substring(2));
-	temperature = temperature/1000;
-	return temperature;
+	try{
+		tempFile = fs.readFileSync(basePathOneWire + sensor,'UTF8');
+		tempData = tempFile.split("\n")[1].split(" ")[9];
+		temperature = Number(tempData.substring(2));
+		temperature = temperature/1000;
+		return temperature;
+	}catch(err){
+		console.log(new Date().toLocaleString() + ' - Error reading from sensor ' + sensor);
+	}
 };
 
 //Connect to mySQL
