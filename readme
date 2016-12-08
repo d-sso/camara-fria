@@ -1,2 +1,10 @@
 Use following command to install service (using forever-service package)
  sudo forever-service install tempMonitorService --script myapi.js --runAsUser root
+
+Steps to install:
+	1-Plug in temperature controller DS...
+	2-Find its ID using the file system
+	3-Change the code
+	4-Reinstall service
+		NOTE: Improve this point, so service fetchs config from file.
+	5-Set up network environment: either use localtunnel (lt --port XXX --subdomain AAA) or set up port forwarding + dynamic DNS

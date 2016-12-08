@@ -1,0 +1,12 @@
+[{
+	"sensor": "28-00044cf31aff/w1_slave",
+	"name":"Cima",
+	"id":0,
+	"setpoint":20,
+	"prevValue":20,
+	"currValue":20,
+	"deadband":0.5,
+	"currTs": 0,
+	"lastOn": 0,
+	"minOffTime": 60000
+}]

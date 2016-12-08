@@ -27,23 +27,13 @@ var app       = express();
 // root path with HTML files
 var htmlRoot = '/webPage';
 // output ports to be used
-var outputs = [ { pin: '11', gpio: '17', value: 0 }
-               ];
+var outputs = JSON.parse(fs.readFileSync('config/outputs.json'));
 // base physical path to fetch data from one wire devices
 var basePathOneWire = '/sys/bus/w1/devices/';
 // the id of the devices read
-var tempSensors = [{
-						sensor: '28-00044cf31aff/w1_slave',
-						name:'Cima',
-						id:0,
-						setpoint:20,
-						prevValue:20,
-						currValue:20,
-						deadband:0.5,
-						currTs: 0,
-						lastOn: new Date(),
-						minOffTime: 60000
-					}];
+var tempSensors = JSON.parse(fs.readFileSync('config/tempSensors.json'))
+// the db connection config
+var dbConn = JSON.parse(fs.readFileSync('config/dbConnection.json'))
 
 // Function to read the temperature value
 function readTemperature(sensor){
@@ -59,12 +49,7 @@ function readTemperature(sensor){
 };
 
 //Connect to mySQL
-var connection = mysql.createConnection({
-		host:'localhost',
-		user:'root',
-		password:'raspberry',
-		database:'dadosProcesso'
-});
+var connection = mysql.createConnection(dbConn);
 connection.connect();
 console.log(new Date().toLocaleString() + ' - Connected to mySQL database');
 
